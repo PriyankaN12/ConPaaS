@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link href="ic2.png" rel="icon" type="image/png"/>
+		<script>
+			user = "";
+			function logout()
+			{
+				user="";
+				var d1 = document.getElementById("input");
+				var d2 = document.getElementById("output");
+				var res = document.getElementById("res");
+				res.innerHTML="";
+				d2.style="display:none";
+				d1.style="display:block";
+			}
+			function login()
+			{
+				var us = document.getElementById("usernm");
+				var pw = document.getElementById("pswd");
+				if((us.value=='UsedBooks' && pw.value=='pwd123') || (us.value=='NewBooks' && pw.value=='pwd456'))
+				{
+					user = us.value;
+					var d1 = document.getElementById("input");
+					var d2 = document.getElementById("output");
+					d1.style="display:none";
+					d2.style="display:block";
+				}
+				else
+				{
+					alert("Invalid credentials!!");
+				}
+				us.value = "";
+				pw.value = "";
+			}
+			function getBook()
+			{
+				book=document.getElementById("book");
+				xhr = new XMLHttpRequest();
+				xhr.onreadystatechange=displayBooks;
+				xhr.open("GET","http://localhost/cc.php?bookname="+user+":"+book.value,true);
+				xhr.send();
+				book.value="";
+			}
+			
+			function displayBooks()
+			{
+				if(xhr.readyState==4 && xhr.status==200)
+				{
+					temp=xhr.responseText;
+					var d = document.getElementById("res");
+					d.innerHTML = temp;
+				}
+			}
+
+		</script>
+		<style>
+			body{
+				color:coral;
+			}
+			div{
+				background-color:white;
+				font-weight:bold;
+				border:5px solid maroon;
+				width:43%;
+				float:left;
+				margin:2%;
+				padding:1%;
+				font-size:20px;
+			}
+		</style>
+	</head>
+	<body style="background:url(CC/pic5.jpg);background-repeat:no-repeat;background-size:cover;padding:0;margin:0;">
+		<center><h1 style="font-size:70px">BOOKKART</h1></center>
+		<marquee><h1>Welcome to Bookkart!</h1></marquee>
+		
+		<center><div style="display:block" id="input"><div style="border:2px solid black;margin:1px;width:98%;padding:1%;">
+			<label>Username:</label>
+			<input type="text" id="usernm"/><br/><br/>
+			<label>Password:</label>
+			<input type="password" id="pswd"/><br/><br/>
+			<input type="button" value="Login" onclick="login()"/><br/>
+		</div></div></center>
+		<center><div style="display:none" id="output"><div style="border:2px solid black;margin:1px;width:98%;padding:1%;">
+			<label>Search For A Book:</label><br/><br/>
+			<input type="text" id="book" /><br/><br/>
+			<input type="button" value="Search" onclick="getBook()"/><br/>
+			<div style="border:none" id="res" ></div>
+			<input type="button" value="Logout" onclick="logout()"/><br/>
+		</div></div></center>
+	</body>
+</html>
